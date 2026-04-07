@@ -4,47 +4,37 @@ import static org.junit.Assert.*;
 public class TrainConsistManagementAppTest {
 
     @Test
-    public void testSort_BasicSorting() {
-        int[] arr = {72, 56, 24, 70, 60};
+    public void testSearch_BogieFound() {
+        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
 
-        TrainConsistManagementApp.bubbleSort(arr);
-
-        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, arr);
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG309"));
     }
 
     @Test
-    public void testSort_AlreadySortedArray() {
-        int[] arr = {24, 56, 60, 70, 72};
+    public void testSearch_BogieNotFound() {
+        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
 
-        TrainConsistManagementApp.bubbleSort(arr);
-
-        assertArrayEquals(new int[]{24, 56, 60, 70, 72}, arr);
+        assertFalse(TrainConsistManagementApp.linearSearch(arr, "BG999"));
     }
 
     @Test
-    public void testSort_DuplicateValues() {
-        int[] arr = {72, 56, 56, 24};
+    public void testSearch_FirstElementMatch() {
+        String[] arr = {"BG101","BG205","BG309"};
 
-        TrainConsistManagementApp.bubbleSort(arr);
-
-        assertArrayEquals(new int[]{24, 56, 56, 72}, arr);
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG101"));
     }
 
     @Test
-    public void testSort_SingleElementArray() {
-        int[] arr = {50};
+    public void testSearch_LastElementMatch() {
+        String[] arr = {"BG101","BG205","BG550"};
 
-        TrainConsistManagementApp.bubbleSort(arr);
-
-        assertArrayEquals(new int[]{50}, arr);
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG550"));
     }
 
     @Test
-    public void testSort_AllEqualValues() {
-        int[] arr = {40, 40, 40};
+    public void testSearch_SingleElementArray() {
+        String[] arr = {"BG101"};
 
-        TrainConsistManagementApp.bubbleSort(arr);
-
-        assertArrayEquals(new int[]{40, 40, 40}, arr);
+        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG101"));
     }
 }
