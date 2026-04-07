@@ -1,40 +1,51 @@
 import org.junit.Test;
 import static org.junit.Assert.*;
+import java.util.Arrays;
 
 public class TrainConsistManagementAppTest {
 
     @Test
-    public void testSearch_BogieFound() {
-        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
+    public void testSort_BasicAlphabeticalSorting() {
+        String[] arr = {"Sleeper","AC Chair","First Class","General","Luxury"};
 
-        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG309"));
+        TrainConsistManagementApp.sortBogieNames(arr);
+
+        assertArrayEquals(new String[]{"AC Chair","First Class","General","Luxury","Sleeper"}, arr);
     }
 
     @Test
-    public void testSearch_BogieNotFound() {
-        String[] arr = {"BG101","BG205","BG309","BG412","BG550"};
+    public void testSort_UnsortedInput() {
+        String[] arr = {"Luxury","General","Sleeper","AC Chair"};
 
-        assertFalse(TrainConsistManagementApp.linearSearch(arr, "BG999"));
+        TrainConsistManagementApp.sortBogieNames(arr);
+
+        assertArrayEquals(new String[]{"AC Chair","General","Luxury","Sleeper"}, arr);
     }
 
     @Test
-    public void testSearch_FirstElementMatch() {
-        String[] arr = {"BG101","BG205","BG309"};
+    public void testSort_AlreadySortedArray() {
+        String[] arr = {"AC Chair","First Class","General"};
 
-        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG101"));
+        TrainConsistManagementApp.sortBogieNames(arr);
+
+        assertArrayEquals(new String[]{"AC Chair","First Class","General"}, arr);
     }
 
     @Test
-    public void testSearch_LastElementMatch() {
-        String[] arr = {"BG101","BG205","BG550"};
+    public void testSort_DuplicateBogieNames() {
+        String[] arr = {"Sleeper","AC Chair","Sleeper","General"};
 
-        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG550"));
+        TrainConsistManagementApp.sortBogieNames(arr);
+
+        assertArrayEquals(new String[]{"AC Chair","General","Sleeper","Sleeper"}, arr);
     }
 
     @Test
-    public void testSearch_SingleElementArray() {
-        String[] arr = {"BG101"};
+    public void testSort_SingleElementArray() {
+        String[] arr = {"Sleeper"};
 
-        assertTrue(TrainConsistManagementApp.linearSearch(arr, "BG101"));
+        TrainConsistManagementApp.sortBogieNames(arr);
+
+        assertArrayEquals(new String[]{"Sleeper"}, arr);
     }
 }
