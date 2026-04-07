@@ -1,51 +1,68 @@
-import java.util.ArrayList;
-import java.util.List;
+import org.junit.jupiter.api.Test;
+import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TrainConsistManagementApp {
+public class TrainConsistManagementAppTest {
 
-    static class GoodsBogie {
-        String type;
-        String cargo;
+    @Test
+    void testLoopFilteringLogic() {
+        List<TrainConsistManagementApp.Bogie> list = new ArrayList<>();
+        list.add(new TrainConsistManagementApp.Bogie("A", 50));
+        list.add(new TrainConsistManagementApp.Bogie("B", 70));
 
-        GoodsBogie(String type, String cargo) {
-            this.type = type;
-            this.cargo = cargo;
-        }
+        List<TrainConsistManagementApp.Bogie> result =
+                TrainConsistManagementApp.loopFilter(list);
+
+        assertEquals(1, result.size());
     }
 
-    public static boolean isSafe(List<GoodsBogie> bogies) {
-        return bogies.stream()
-                .allMatch(b -> !b.type.equals("Cylindrical") || b.cargo.equals("Petroleum"));
+    @Test
+    void testStreamFilteringLogic() {
+        List<TrainConsistManagementApp.Bogie> list = new ArrayList<>();
+        list.add(new TrainConsistManagementApp.Bogie("A", 50));
+        list.add(new TrainConsistManagementApp.Bogie("B", 70));
+
+        List<TrainConsistManagementApp.Bogie> result =
+                TrainConsistManagementApp.streamFilter(list);
+
+        assertEquals(1, result.size());
     }
 
-    public static void main(String[] args) {
+    @Test
+    void testLoopAndStreamResultsMatch() {
+        List<TrainConsistManagementApp.Bogie> list = new ArrayList<>();
+        list.add(new TrainConsistManagementApp.Bogie("A", 80));
+        list.add(new TrainConsistManagementApp.Bogie("B", 40));
 
-        System.out.println("===============================================");
-        System.out.println(" UC12 - Safety Compliance Check for Goods Bogies ");
-        System.out.println("===============================================\n");
+        int loopSize = TrainConsistManagementApp.loopFilter(list).size();
+        int streamSize = TrainConsistManagementApp.streamFilter(list).size();
 
-        List<GoodsBogie> goodsBogies = new ArrayList<>();
+        assertEquals(loopSize, streamSize);
+    }
 
-        goodsBogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
-        goodsBogies.add(new GoodsBogie("Open", "Coal"));
-        goodsBogies.add(new GoodsBogie("Box", "Grain"));
-        goodsBogies.add(new GoodsBogie("Cylindrical", "Coal"));
+    @Test
+    void testExecutionTimeMeasurement() {
+        List<TrainConsistManagementApp.Bogie> list = new ArrayList<>();
+        list.add(new TrainConsistManagementApp.Bogie("A", 80));
 
-        System.out.println("Goods Bogies in Train:");
-        for (GoodsBogie b : goodsBogies) {
-            System.out.println(b.type + " -> " + b.cargo);
+        long start = System.nanoTime();
+        TrainConsistManagementApp.loopFilter(list);
+        long end = System.nanoTime();
+
+        assertTrue(end - start > 0);
+    }
+
+    @Test
+    void testLargeDatasetProcessing() {
+        List<TrainConsistManagementApp.Bogie> list = new ArrayList<>();
+
+        for (int i = 0; i < 10000; i++) {
+            list.add(new TrainConsistManagementApp.Bogie("T", i));
         }
 
-        boolean safe = isSafe(goodsBogies);
+        List<TrainConsistManagementApp.Bogie> result =
+                TrainConsistManagementApp.streamFilter(list);
 
-        System.out.println("\nSafety Compliance Status: " + safe);
-
-        if (safe) {
-            System.out.println("Train formation is SAFE.");
-        } else {
-            System.out.println("Train formation is NOT SAFE.");
-        }
-
-        System.out.println("\nUC12 safety validation completed...");
+        assertNotNull(result);
     }
 }
