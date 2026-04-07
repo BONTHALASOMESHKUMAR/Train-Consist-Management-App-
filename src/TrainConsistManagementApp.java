@@ -1,68 +1,43 @@
-import org.junit.jupiter.api.Test;
 import java.util.*;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class TrainConsistManagementAppTest {
+public class TrainConsistManagementApp {
 
-    @Test
-    void testLoopFilteringLogic() {
-        List<TrainConsistManagementApp.Bogie> list = new ArrayList<>();
-        list.add(new TrainConsistManagementApp.Bogie("A", 50));
-        list.add(new TrainConsistManagementApp.Bogie("B", 70));
-
-        List<TrainConsistManagementApp.Bogie> result =
-                TrainConsistManagementApp.loopFilter(list);
-
-        assertEquals(1, result.size());
+    static class InvalidCapacityException extends Exception {
+        public InvalidCapacityException(String message) {
+            super(message);
+        }
     }
 
-    @Test
-    void testStreamFilteringLogic() {
-        List<TrainConsistManagementApp.Bogie> list = new ArrayList<>();
-        list.add(new TrainConsistManagementApp.Bogie("A", 50));
-        list.add(new TrainConsistManagementApp.Bogie("B", 70));
+    static class PassengerBogie {
+        String type;
+        int capacity;
 
-        List<TrainConsistManagementApp.Bogie> result =
-                TrainConsistManagementApp.streamFilter(list);
-
-        assertEquals(1, result.size());
+        PassengerBogie(String type, int capacity) throws InvalidCapacityException {
+            if (capacity <= 0) {
+                throw new InvalidCapacityException("Capacity must be greater than zero");
+            }
+            this.type = type;
+            this.capacity = capacity;
+        }
     }
 
-    @Test
-    void testLoopAndStreamResultsMatch() {
-        List<TrainConsistManagementApp.Bogie> list = new ArrayList<>();
-        list.add(new TrainConsistManagementApp.Bogie("A", 80));
-        list.add(new TrainConsistManagementApp.Bogie("B", 40));
+    public static void main(String[] args) {
 
-        int loopSize = TrainConsistManagementApp.loopFilter(list).size();
-        int streamSize = TrainConsistManagementApp.streamFilter(list).size();
+        System.out.println("===============================================");
+        System.out.println(" UC14 - Handle Invalid Bogie Capacity ");
+        System.out.println("===============================================\n");
 
-        assertEquals(loopSize, streamSize);
-    }
+        try {
+            PassengerBogie b1 = new PassengerBogie("Sleeper", 72);
+            System.out.println("Created Bogie: " + b1.type + " -> " + b1.capacity);
 
-    @Test
-    void testExecutionTimeMeasurement() {
-        List<TrainConsistManagementApp.Bogie> list = new ArrayList<>();
-        list.add(new TrainConsistManagementApp.Bogie("A", 80));
+            PassengerBogie b2 = new PassengerBogie("AC Chair", 0);
+            System.out.println("Created Bogie: " + b2.type + " -> " + b2.capacity);
 
-        long start = System.nanoTime();
-        TrainConsistManagementApp.loopFilter(list);
-        long end = System.nanoTime();
-
-        assertTrue(end - start > 0);
-    }
-
-    @Test
-    void testLargeDatasetProcessing() {
-        List<TrainConsistManagementApp.Bogie> list = new ArrayList<>();
-
-        for (int i = 0; i < 10000; i++) {
-            list.add(new TrainConsistManagementApp.Bogie("T", i));
+        } catch (InvalidCapacityException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
-        List<TrainConsistManagementApp.Bogie> result =
-                TrainConsistManagementApp.streamFilter(list);
-
-        assertNotNull(result);
+        System.out.println("\nUC14 exception handling completed...");
     }
 }
